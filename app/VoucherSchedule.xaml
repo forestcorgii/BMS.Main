@@ -1,0 +1,106 @@
+﻿<Page x:Class="VoucherSchedule"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:app"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Margin="10"
+      Title="VoucherSchedule">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="120"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--Filter-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Click="btnGoBack_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Padding="6,0">
+                <Button.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="assets/back.png" VerticalAlignment="Center" />
+                        <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Back to Voucher"/>
+                    </Grid>
+                </Button.Content>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel >
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <TextBlock x:Name="lbId" Visibility="Collapsed"/>
+                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="Voucher Template" HorizontalAlignment="Left"/>
+                        <ComboBox x:Name="cbVoucherTemplates" Style="{StaticResource RegularComboBox}" Width="275"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource RegularTextBlock}" HorizontalAlignment="Left">Interval</TextBlock>
+                        <ComboBox x:Name="cbInterval" Style="{StaticResource RegularComboBox}" Width="100" HorizontalAlignment="Left">
+                            <ComboBoxItem>Monthly</ComboBoxItem>
+                            <ComboBoxItem>Quarterly</ComboBoxItem>
+                            <ComboBoxItem>Bi-Annual</ComboBoxItem>
+                            <ComboBoxItem>Annual</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="From" HorizontalAlignment="Left"/>
+                        <DatePicker x:Name="dtFrom" Style="{StaticResource RegularDatePicker}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="To" HorizontalAlignment="Left"/>
+                        <DatePicker x:Name="dtTo" Style="{StaticResource RegularDatePicker}"/>
+                    </StackPanel>
+                    <Button Click="btnAddVoucherSchedule_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Padding="6,0" Height="25" VerticalAlignment="Bottom">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Source="assets/save.png" VerticalAlignment="Center" />
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Save Schedule"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <DataGrid x:Name="lstVoucherSchedules" 
+                  HorizontalAlignment="Left"
+                    AutoGenerateColumns="False"
+                    Grid.Row="2"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    IsReadOnly="True">
+
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Style.Setters>
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style.Setters>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Voucher Template Name" Width="500" Binding="{Binding Template_Name}"/>
+                <DataGridTextColumn Header="Interval" Width="100" Binding="{Binding Interval}"/>
+                <DataGridTextColumn Header="From" Width="100" Binding="{Binding Start_From}"/>
+                <DataGridTextColumn Header="To" Width="100" Binding="{Binding End_To}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+ 
+    </Grid>
+</Page>

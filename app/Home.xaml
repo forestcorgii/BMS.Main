@@ -1,0 +1,96 @@
+﻿<Page x:Class="Home"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:app"
+      mc:Ignorable="d" 
+      Margin="10"
+      d:DesignHeight="1450" d:DesignWidth="1200"
+      Title="Home">
+    <Page.Resources>
+        <local:Reminderss x:Key="Reminder"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1">
+            
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Pending Voucher:" VerticalAlignment="Bottom" Style="{StaticResource SubHeader}"/>
+            <DataGrid x:Name="lstReminders" 
+                  Grid.Row="1"
+                  HorizontalAlignment="Left"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Style.Setters>
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style.Setters>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="btnGenerate" Click="btnGenerate_Click">Generate Voucher</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Template Name" Width="325" Binding="{Binding Schedule_Template_Name}"/>
+                <DataGridTextColumn Header="Interval" Width="100" Binding="{Binding Schedule_Interval}"/>
+                <DataGridTextColumn Header="Remarks" Width="150" Binding="{Binding Template_Remarks}"/>
+                <DataGridTextColumn Header="Date Added" Width="125" Binding="{Binding Date_Added}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        </Grid>
+        </StackPanel>
+        <!--<ListView x:Name="lstReminders" Grid.Row="1" ItemsSource="{StaticResource Reminder}" Width="450">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Gainsboro" BorderThickness="1">
+                    <Grid Width="440">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="65"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Name="dada" Grid.ColumnSpan="2">
+                            <TextBlock FontSize="16" Text="{Binding Schedule_Template_Name}" Margin="10,10,0,0" TextWrapping="Wrap"/>
+                            <TextBlock FontSize="10" Text="{Binding Visible_Until}" Margin="10,0,0,0"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="10" TextWrapping="Wrap" Text="{Binding Template_Remarks}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" FontSize="24" Text="{Binding Day_Left}"/>
+                    </Grid>
+                    </Border>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Schedule_Interval}" Value="0">
+                            <Setter TargetName="dada" Property="Background" Value="#dae8f5"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Schedule_Interval}" Value="1">
+                            <Setter TargetName="dada"  Property="DockPanel.Background" Value="#f5ecda"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Schedule_Interval}" Value="2">
+                            <Setter TargetName="dada"  Property="DockPanel.Background" Value="#e9daf5"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+
+    </Grid>
+</Page>

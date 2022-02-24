@@ -1,0 +1,85 @@
+﻿<Page x:Class="Printer"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:app"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="900"
+      Title="Printer">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+
+
+        <Button Click="btnGoBack_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Padding="6,0">
+            <Button.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Source="assets/back.png" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Go Back to Voucher"/>
+                </Grid>
+            </Button.Content>
+        </Button>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Search:" VerticalAlignment="Center" Style="{StaticResource SubHeader}"/>
+                <TextBox x:Name="tbSearch" TextChanged="tbSearch_TextChanged" LostFocus="tbSearch_LostFocus" Width="200" Margin="8" VerticalAlignment="Center"/>
+            </StackPanel>
+            <ComboBox x:Name="cbCompany" Width="175" Margin="4" VerticalAlignment="Center" Text="ALL COMPANIES">
+                <ComboBoxItem>ALL COMPANIES</ComboBoxItem>
+            </ComboBox>
+            <ComboBox x:Name="cbSupplier" Width="175" Margin="4" VerticalAlignment="Center" Text="ALL SUPPLIER">
+                <ComboBoxItem>ALL SUPPLIER</ComboBoxItem>
+            </ComboBox>
+             <Button x:Name="btnSearch" Click="btnSearch_Click" Style="{StaticResource SecondaryButton}">Search</Button>
+            <StackPanel Orientation="Horizontal">
+            </StackPanel>
+        </StackPanel>
+
+        <CheckBox x:Name="chbSelectAll" Checked="chbSelectAll_Checked" Unchecked="chbSelectAll_UnChecked" Grid.Row="1" Margin="8" Content="Select All" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+        <DataGrid x:Name="lstVoucher" 
+                  AutoGenerateColumns="False"
+                  Grid.Row="2"
+                  HorizontalAlignment="Left"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Style.Setters>
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style.Setters>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Voucher No." Width="75" Binding="{Binding Voucher_No}"/>
+                <DataGridTextColumn Header="Entry Date" Width="100" Binding="{Binding Entry_Date}"/>
+                <DataGridTextColumn Header="Company Name" Width="225" Binding="{Binding Company_Name}"/>
+                <DataGridTextColumn Header="Supplier Payee" Width="225" Binding="{Binding Supplier_Payee}"/>
+                <DataGridTextColumn Header="Supplier Account Number" Width="150" Binding="{Binding Supplier_Account_Number}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="btnPrintSelectedVoucher" Click="btnPrintSelectedVoucher_Click" Grid.Row="4" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="6,0">
+            <Button.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Source="assets/print-white.png" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Print Selected"/>
+                </Grid>
+            </Button.Content>
+        </Button>
+    </Grid>
+</Page>

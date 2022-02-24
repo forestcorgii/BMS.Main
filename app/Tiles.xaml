@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Tiles"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:app"
+             mc:Ignorable="d" 
+             d:DesignWidth="180" d:DesignHeight="45"
+             MinWidth="180" MinHeight="45"
+             MaxWidth="180" MaxHeight="45"
+             Margin="6">
+
+        <Button x:Name="btn" Click="btn_Click">
+            <Button.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                
+                    <Image  x:Name="imgIcon" Grid.Column="0" Margin="3" Source="assets/building.png" />
+                    <TextBlock x:Name="lbHeader" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" FontSize="14" FontWeight="DemiBold" Text="dada"/>
+                </Grid>
+            </Button.Content>
+        </Button>
+
+</UserControl>

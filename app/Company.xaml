@@ -1,0 +1,116 @@
+﻿<Page x:Class="Company"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:app"
+      mc:Ignorable="d" 
+      Margin="10"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Company"
+      >
+    <Grid>
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+
+        <!--Filter-->
+
+        <!--<StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Voucher No.: "/>
+                <TextBox/>
+            </StackPanel>
+        </StackPanel>-->
+
+        <Button Click="btnGoBack_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left" Padding="6,0">
+            <Button.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Source="assets/back.png" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Go Back to Settings"/>
+                </Grid>
+            </Button.Content>
+        </Button>
+
+        <Button Click="btnAddCompanyBankAccount_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0">
+            <Button.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Source="assets/add.png" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Add Bank Account"/>
+                </Grid>
+            </Button.Content>
+        </Button> 
+        
+        <DataGrid x:Name="lstCompany" 
+                  HorizontalAlignment="Left"
+                    Grid.Row="1"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="True"
+                    CanUserDeleteRows="False"
+                    CanUserSortColumns="True">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ChangeState}" Value="0">
+                            <Setter Property="FontStyle" Value="Italic"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ChangeState}" Value="2">
+                            <Setter Property="Foreground" Value="Maroon"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Style.Setters>
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style.Setters>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+ 
+                <DataGridTextColumn Header="Id" Width="75" Binding="{Binding Id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Name" Width="220" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="TIN" Width="150" Binding="{Binding TIN}"/>
+                <DataGridTextColumn Header="Address" Width="200" Binding="{Binding Address}"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!--<Button x:Name="btnGoBack" Grid.Column="0" Click="btnGoBack_Click" Content="Go Back without Saving" HorizontalAlignment="Left" Style="{StaticResource SecondaryButton}" />-->
+            <!--<Button Grid.Column="1" Click="btnSave_Click" Content="Save" HorizontalAlignment="Right" Style="{StaticResource PrimaryButton}" />-->
+            <Button Click="btnSave_Click" Grid.Column="1" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="6,0">
+                <Button.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="assets/save.png" VerticalAlignment="Center" />
+                        <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Save"/>
+                    </Grid>
+                </Button.Content>
+            </Button>
+        </Grid>
+
+    </Grid>
+</Page>

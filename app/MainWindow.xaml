@@ -1,0 +1,75 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:app"
+        WindowState="Maximized"
+        mc:Ignorable="d" FontSize="12" FontFamily="Segoe UI"
+        Height="800" Width="1200">
+
+    <Window.Resources>
+    </Window.Resources>
+    <Border>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions >
+                <RowDefinition Height="75" />
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="8" Grid.ColumnSpan="1" Orientation="Horizontal" VerticalAlignment="Top">
+                <Button x:Name="btnTitle"
+                        Click="btnJournalEntry_Checked"                    
+                        Cursor="Hand"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        FontSize="22"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Margin="20">Accounting</Button>
+                <RadioButton x:Name="btnVoucher" 
+                             Content="Voucher"
+                             Style="{StaticResource MenuButtonTheme}" 
+                             Click="btnJournalEntry_Checked"/>
+                
+                <RadioButton x:Name="btnSettings" 
+                             Content="Settings"
+                             Style="{StaticResource MenuButtonTheme}" 
+                             Click="btnJournalEntry_Checked"/>
+                <StackPanel x:Name="pnlSettingsSubMenu" Visibility="Collapsed">
+                </StackPanel>
+            </StackPanel>
+
+            <DockPanel Grid.Column="1" 
+                       Width="250" Height="45"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right">
+                <Menu DockPanel.Dock="Top" Height="45" HorizontalAlignment="Center">
+                    <MenuItem Style="{StaticResource ProfileMenuItemTheme}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="tbProfile" HorizontalAlignment="Right" Text="Fernandez, Sean Ivan M."  VerticalAlignment="Center"/>
+                                <Image Source="Assets/dropdown_outlined.png" Margin="8,14,0,14"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                        <MenuItem Click="mnChangePassword_Click" Header="Change Password" />
+                        <MenuItem Click="mnLogout_Click" Header="Logout" />
+                        <Separator />
+                        <MenuItem Click="mnExit_Click" Header="_Exit" />
+                    </MenuItem>
+                </Menu>
+                <TextBox AcceptsReturn="True" />
+            </DockPanel>
+
+            <Frame Name="frmMain" Grid.Row="1" Grid.Column="2" 
+                    BorderBrush="#FF786F6F" BorderThickness="0.3" Margin="5,0,5,5" 
+                    NavigationUIVisibility="Hidden"/>
+
+        </Grid>
+    </Border>
+    
+</Window>
