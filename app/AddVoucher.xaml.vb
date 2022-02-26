@@ -344,13 +344,4 @@ Class AddVoucher
         Template
     End Enum
 
-    Private Sub chbIsIrregular_Checked(sender As Object, e As RoutedEventArgs)
-        If chbIsIrregular.IsChecked Then
-            tbSupplier.ReadOnly = False
-            tbSupplierAccount.ReadOnly = True
-        Else
-            tbSupplier.ReadOnly = True
-            tbSupplierAccount.ReadOnly = False
-        End If
-    End Sub
 End Class

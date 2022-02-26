@@ -66,15 +66,12 @@
                             <TextBlock Text="Entry Date:" Style="{StaticResource RegularTextBlock}"/>
                             <DatePicker x:Name="dtEntryDate"  Width="200" HorizontalAlignment="Left"/>
                         </StackPanel>
-                        <StackPanel Width="330" VerticalAlignment="Center" Margin="10">
-                            <CheckBox Checked="chbIsIrregular_Checked" Unchecked="chbIsIrregular_Checked" x:Name="chbIsIrregular" Margin="0,15,0,0">IRREGULAR</CheckBox>                          
-                        </StackPanel>
                     </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Width="330">
                                 <TextBlock Text="Supplier's Payee:" Style="{StaticResource RegularTextBlock}"/>
                             <WindowsFormsHost Height="22">
-                                <wf:TextBox x:Name="tbSupplier" Height="25" BorderStyle="FixedSingle" ReadOnly="True"/>
+                                <wf:TextBox x:Name="tbSupplier" Height="25" BorderStyle="FixedSingle"/>
                             </WindowsFormsHost>
                             <!--<ComboBox x:Name="cbSupplier"/>-->
                         </StackPanel>
