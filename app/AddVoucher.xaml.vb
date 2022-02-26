@@ -227,13 +227,13 @@ Class AddVoucher
                 Dim supplier_args As String() = tbSupplier.Text.Split("-")
                 Supplier = Controller.Supplier.GetSupplier(supplier_args(0).Trim, supplier_args(1).Trim, DatabaseManager)
                 If Supplier IsNot Nothing Then
-                    SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, "", Supplier.Id)
+                    'SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, "", Supplier.Id)
 
-                    Particulars = New ObservableCollection(Of Model.ParticularsItem)
-                    For Each i As Model.ParticularsItem In SupplierAccount.Default_Particulars
-                        Particulars.Add(i)
-                    Next
-                    lstParticulars.ItemsSource = Particulars
+                    'Particulars = New ObservableCollection(Of Model.ParticularsItem)
+                    'For Each i As Model.ParticularsItem In SupplierAccount.Default_Particulars
+                    '    Particulars.Add(i)
+                    'Next
+                    'lstParticulars.ItemsSource = Particulars
                 End If
 
                 Company = SupplierAccount.Company
