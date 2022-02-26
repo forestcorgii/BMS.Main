@@ -86,7 +86,6 @@ Namespace Controller
                             If completeDetail Then CompleteSupplierAccountDetail(_supplier_account, databaseManager)
                             supplier_accounts.Add(_supplier_account)
                         End While
-                    Else : MessageBox.Show("There is no available Supplier Account to select, please finish setting up.", "", MessageBoxButton.OK, MessageBoxImage.Error)
                     End If
                 End Using
             Catch ex As Exception
