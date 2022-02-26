@@ -41,14 +41,6 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!--<StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="12" Text="Particulars: " VerticalAlignment="Top" />
-                        <TextBlock FontSize="8" Foreground="MidnightBlue" Text="{Binding Particulars_String}" VerticalAlignment="Center" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="12" Text="Distribution of Accounts: " VerticalAlignment="Top" />
-                        <TextBlock FontSize="8" Foreground="MidnightBlue" Text="{Binding Journal_Account_Distributions_String}" VerticalAlignment="Center" />
-                    </StackPanel>-->
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="8">
                             <TextBlock FontSize="12" Text="Gross Amount: " VerticalAlignment="Center" />
@@ -186,21 +178,8 @@
                 <WindowsFormsHost Height="22" Margin="8" VerticalAlignment="Center" Width="400">
                     <wf:TextBox x:Name="tbSearch" Height="25" BorderStyle="FixedSingle"/>
                 </WindowsFormsHost>
-                <!--<TextBox x:Name="tbSearch" TextChanged="tbSearch_TextChanged" LostFocus="tbSearch_LostFocus" Width="400" Margin="8" VerticalAlignment="Center"/>-->
             </StackPanel>
-            <!--<ComboBox x:Name="cbCompany" Width="175" Margin="4" VerticalAlignment="Center" Text="ALL COMPANIES">
-                <ComboBoxItem></ComboBoxItem>
-            </ComboBox>
-            <ComboBox x:Name="cbSupplier" Width="175" Margin="4" VerticalAlignment="Center" Text="ALL SUPPLIER">
-                <ComboBoxItem></ComboBoxItem>
-            </ComboBox>-->
-            <!--<ComboBox x:Name="cbPrintStatus" Width="125" Margin="4" VerticalAlignment="Center" Text="ALL">
-                    <ComboBoxItem></ComboBoxItem>
-                    <ComboBoxItem>NOT PRINTED YET</ComboBoxItem>
-                    <ComboBoxItem>ON QUEUE</ComboBoxItem>
-                    <ComboBoxItem>PRINTED</ComboBoxItem>
-                    <ComboBoxItem>CANCELLED</ComboBoxItem>
-            </ComboBox>-->
+
             <Button x:Name="btnSearch" Click="btnSearch_Click" Style="{StaticResource SecondaryButton}">Search</Button>
             <StackPanel Orientation="Horizontal">
             </StackPanel>
@@ -231,19 +210,5 @@
                 <DataGridTextColumn Header="Print Status" Width="150" Binding="{Binding Print_Status}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <!--<StackPanel Grid.Row="3" Orientation="Horizontal">
-            <Button x:Name="btnAddToPrintQueue" Click="btnAddToPrintQueue_Click" Style="{StaticResource SecondaryButton}" Padding="6,0">
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="assets/print.png" VerticalAlignment="Center" />
-                        <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Add Selected to Print Queue"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-        </StackPanel>-->
     </Grid>
 </Page>

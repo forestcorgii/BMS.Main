@@ -339,6 +339,11 @@ Class AddVoucher
         End If
     End Sub
 
+    Private Sub AddVoucher_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        Particulars = New ObservableCollection(Of books_service.Model.ParticularsItem)
+        lstParticulars.ItemsSource = Particulars
+    End Sub
+
     Public Enum EditModeChoices
         Voucher
         Template
