@@ -31,7 +31,6 @@ Module SharedObject
                 Return User.Login(login.Remember, DatabaseManager)
             End If
         End If
-
         Return Not loginRequired
     End Function
     'PUSH DADADA

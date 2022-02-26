@@ -122,7 +122,7 @@ Namespace Controller
 
         Public Shared Sub ImportSuppliers(databaseManager As Manager.Mysql, filenames As String())
             For Each fl As String In filenames
-                Using reader As New StreamReader(fl)
+                Using reader As New StreamReader(fl, Text.Encoding.UTF8)
                     Dim l As String = reader.ReadLine : l = reader.ReadLine
                     While l IsNot Nothing
                         Dim args As String() = l.Split(";")
