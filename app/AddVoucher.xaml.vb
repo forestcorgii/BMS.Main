@@ -16,7 +16,6 @@ Class AddVoucher
     Private Voucher As Model.Voucher
     Private VoucherTemplate As Model.VoucherTemplate
 
-    Private SupplierAccount As Model.SupplierAccount
 
 
     Private Companies As List(Of Model.Company)
@@ -25,6 +24,17 @@ Class AddVoucher
     Private JournalAccounts As List(Of Model.JournalAccount)
 
 #Region "Properties"
+    Private __SupplierAccount As Model.SupplierAccount
+    Private Property SupplierAccount As Model.SupplierAccount
+        Get
+            Return __SupplierAccount
+        End Get
+        Set(value As Model.SupplierAccount)
+            __SupplierAccount = value
+            If value.Account_Number <> "" Then tbSupplierAccount.Text = value.ToString
+        End Set
+    End Property
+
     Private __Supplier As Model.Supplier
     Private Property Supplier As Model.Supplier
         Get
@@ -32,7 +42,7 @@ Class AddVoucher
         End Get
         Set(value As Model.Supplier)
             __Supplier = value
-            tbSupplier.Text = value.ToString
+            If value.Name <> "" Then tbSupplier.Text = value.ToString
         End Set
     End Property
 
@@ -132,7 +142,7 @@ Class AddVoucher
         autoCompleteSource = New Forms.AutoCompleteStringCollection
         SupplierAccounts = Controller.SupplierAccount.LoadSupplierAccounts(DatabaseManager).ToList
         For Each _supplierAccount As Model.SupplierAccount In SupplierAccounts
-            autoCompleteSource.Add(_supplierAccount.Account_Number & " - " & _supplierAccount.Supplier_Name & " - " & _supplierAccount.Supplier_Id)
+            autoCompleteSource.Add(_supplierAccount.Account_Number & " - " & _supplierAccount.Supplier_Id)
         Next
 
         With tbSupplierAccount
@@ -149,9 +159,8 @@ Class AddVoucher
 
     Private Sub SetupVAT()
         Dim vatRate As Double = 0.12
-        cbVATType.Items.Add(New Model.VAT() With {.Name = "NON_VAT", .Rate = 0})
-        cbVATType.Items.Add(New Model.VAT() With {.Name = "VAT_INC", .Rate = 0})
-        cbVATType.Items.Add(New Model.VAT() With {.Name = "VAT_EX", .Rate = vatRate})
+
+        cbVATType.ItemsSource = [Enum].GetValues(GetType(Model.JournalAccountDistributionItem.VATTypeChoices))
     End Sub
 
     Private Sub PopulateVoucher(voucherForEdit As Model.Voucher)
@@ -168,7 +177,7 @@ Class AddVoucher
         Supplier = voucherForEdit.Supplier
         SupplierAccount = voucherForEdit.Supplier_Account
 
-        tbSupplierAccount.Text = voucherForEdit.Supplier_Account.Account_Number
+        'tbSupplierAccount.Text = voucherForEdit.Supplier_Account.Account_Number
 
         Particulars = New ObservableCollection(Of Model.ParticularsItem)(voucherForEdit.Particulars)
         lstParticulars.ItemsSource = Particulars
@@ -179,9 +188,10 @@ Class AddVoucher
     End Sub
 
     Private Sub cbCompany_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbCompany.SelectionChanged
-        If e.AddedItems.Count > 0 Then 'And Mode = ProcessTypeChoices.STAND_BY Then
+        If e.AddedItems.Count > 0 And Not Mode = ProcessTypeChoices.BUSY Then
             Dim ConnectionIsOpenedFromOutside As Boolean = DatabaseManager.Connection.State = System.Data.ConnectionState.Open
-            DatabaseManager.Connection.Open()
+            If Not ConnectionIsOpenedFromOutside Then DatabaseManager.Connection.Open()
+
             Try
                 Dim company As Model.Company = DirectCast(e.AddedItems(0), Model.Company)
                 cbBankAccount.ItemsSource = Controller.CompanyBankAccount.LoadCompanyBankAccounts(DatabaseManager, company.Id)
@@ -189,63 +199,63 @@ Class AddVoucher
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "cbCompany_SelectionChanged", MessageBoxButton.OK, MessageBoxImage.Error)
             End Try
-            DatabaseManager.Connection.Close()
+            If Not ConnectionIsOpenedFromOutside Then DatabaseManager.Connection.Close()
         End If
     End Sub
 
     Private Sub tbSupplierAccount_TextChanged(sender As Object, e As EventArgs) Handles tbSupplierAccount.LostFocus
-        If tbSupplierAccount.TextLength > 5 And Mode = ProcessTypeChoices.STAND_BY Then
+        If tbSupplierAccount.TextLength > 5 And Mode <> ProcessTypeChoices.BUSY Then
             DatabaseManager.Connection.Open()
+            Mode = ProcessTypeChoices.BUSY
+            Dim template As Model.VoucherTemplate = Nothing
             Try
                 Dim supplierAccount_args As String() = tbSupplierAccount.Text.Split("-")
 
-                SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, supplierAccount_args(0).Trim, supplierAccount_args(2).Trim)
+                SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, supplierAccount_args(0).Trim, supplierAccount_args(1).Trim)
 
-                Particulars = New ObservableCollection(Of Model.ParticularsItem)
-                For Each i As Model.ParticularsItem In SupplierAccount.Default_Particulars
-                    Particulars.Add(i)
-                Next
-                lstParticulars.ItemsSource = Particulars
-
-                Controller.SupplierAccount.CompleteSupplierAccountDetail(SupplierAccount, DatabaseManager)
-
-                Company = SupplierAccount.Company
-                Company_Bank_Account = SupplierAccount.Company_Bank_Account
-
-                Supplier = SupplierAccount.Supplier
+                If SupplierAccount IsNot Nothing Then
+                    template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, SupplierAccount.Supplier_Id, SupplierAccount.Id)
+                End If
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "tbSupplierAccount_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
             End Try
+
+            Mode = ProcessTypeChoices.STAND_BY
+
+            If template IsNot Nothing Then
+                Controller.Voucher.CompleteVoucherDetail(template.Voucher, DatabaseManager)
+                PopulateVoucher(template.Voucher)
+            End If
 
             DatabaseManager.Connection.Close()
         End If
     End Sub
     Private Sub tbSupplier_TextChanged(sender As Object, e As EventArgs) Handles tbSupplier.LostFocus
-        If tbSupplierAccount.TextLength > 5 And Mode = ProcessTypeChoices.STAND_BY Then
+        If tbSupplier.TextLength > 5 And Mode <> ProcessTypeChoices.BUSY Then
             DatabaseManager.Connection.Open()
+            Mode = ProcessTypeChoices.BUSY
+
+            Dim template As Model.VoucherTemplate = Nothing
             Try
                 Dim supplier_args As String() = tbSupplier.Text.Split("-")
                 Supplier = Controller.Supplier.GetSupplier(supplier_args(0).Trim, supplier_args(1).Trim, DatabaseManager)
                 If Supplier IsNot Nothing Then
-                    'SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, "", Supplier.Id)
+                    template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, Supplier.Id, 0)
 
-                    'Particulars = New ObservableCollection(Of Model.ParticularsItem)
-                    'For Each i As Model.ParticularsItem In SupplierAccount.Default_Particulars
-                    '    Particulars.Add(i)
-                    'Next
-                    'lstParticulars.ItemsSource = Particulars
                 End If
-
-                Company = SupplierAccount.Company
-                Company_Bank_Account = SupplierAccount.Company_Bank_Account
-
-                Supplier = SupplierAccount.Supplier
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "tbSupplier_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
             End Try
 
+            Mode = ProcessTypeChoices.STAND_BY
+
+            If template IsNot Nothing Then
+                Controller.Voucher.CompleteVoucherDetail(template.Voucher, DatabaseManager)
+                PopulateVoucher(template.Voucher)
+            End If
             DatabaseManager.Connection.Close()
         End If
+
     End Sub
 
     Private Sub btnAddJournalAccount_Click(sender As Object, e As RoutedEventArgs)
@@ -258,7 +268,7 @@ Class AddVoucher
                 .Journal_Account = cbJournalAccount.SelectedItem
                 .Amount = CInt(tbAmount.Text)
                 .W_TAX = tbWTaxRate.Text
-                .VAT = cbVATType.SelectedItem.name
+                .VAT = cbVATType.SelectedItem
             End With
 
             JournalAccountDistributions.Add(newJournalAccountDistributionItem)
@@ -267,7 +277,7 @@ Class AddVoucher
             cbJournalAccount.SelectedItem = Nothing
             tbAmount.Text = ""
             tbWTaxRate.Text = ""
-            cbVATType.SelectedItem = Nothing
+            cbVATType.SelectedItem = 0
         Else
             MessageBox.Show("All Fields are Reqiured, input all Fields.", MessageBoxButton.OK, MessageBoxImage.Error)
         End If
@@ -275,6 +285,15 @@ Class AddVoucher
 
     Private Sub btnSave_Click(sender As Object, e As RoutedEventArgs)
         DatabaseManager.Connection.Open()
+
+        If Supplier IsNot Nothing And SupplierAccount.Account_Number Is Nothing And tbSupplierAccount.Text <> "" Then
+            If MessageBox.Show(String.Format("Account Number does not exist. It will be saved with Supplier {0}, Proceed?", Supplier.Name), "Save as Template", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) Then
+                SupplierAccount = New Model.SupplierAccount() With {.Supplier = Supplier, .Account_Number = tbSupplierAccount.Text}
+                Controller.SupplierAccount.SaveSupplierAccount(SupplierAccount, DatabaseManager.Connection)
+                SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, SupplierAccount.Account_Number, SupplierAccount.Supplier.Id)
+            End If
+        End If
+
         Try
             Dim newVoucher As New Model.Voucher
             With newVoucher
@@ -304,10 +323,15 @@ Class AddVoucher
                 If EditMode = EditModeChoices.Voucher Then Controller.Voucher.SaveVoucher(newVoucher, DatabaseManager.Connection, User)
             End With
 
-            If EditMode = EditModeChoices.Template Then
-                With VoucherTemplate
-                    .Voucher = newVoucher
-                    Controller.VoucherTemplate.SaveVoucherTemplate(VoucherTemplate, DatabaseManager.Connection)
+            If MessageBox.Show("Add Voucher as Template?", "Save as Template", MessageBoxButton.YesNo, MessageBoxImage.Question) Then
+                Dim newVoucherTemplate As New Model.VoucherTemplate
+                With newVoucherTemplate
+                    .Voucher = Controller.Voucher.ToTemplate(newVoucher)
+                    .Supplier_Id = newVoucher.Supplier_Id
+                    .Supplier_Account_Id = newVoucher.Supplier_Account_Id
+                    .ChangeState = States.ChangeState.Added
+
+                    Controller.VoucherTemplate.SaveVoucherTemplate(newVoucherTemplate, DatabaseManager.Connection)
                 End With
             End If
 
@@ -340,6 +364,8 @@ Class AddVoucher
     End Sub
 
     Private Sub AddVoucher_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        SupplierAccount = New Model.SupplierAccount
+
         Particulars = New ObservableCollection(Of books_service.Model.ParticularsItem)
         lstParticulars.ItemsSource = Particulars
     End Sub

@@ -12,7 +12,7 @@ Namespace Model
             End Get
         End Property
 
-        Public Property VAT As String
+        Public Property VAT As VATTypeChoices
 
         <JsonIgnore> Public ReadOnly Property Net_Amount As Double
             Get
@@ -22,15 +22,15 @@ Namespace Model
 
         <JsonIgnore> Public ReadOnly Property TAX_Amount As Double
             Get
-                If VAT.ToUpper = "NONE" Then
+                If VAT = VATTypeChoices.NON_VAT Then
                     Return Amount * W_TAX
                 Else
                     Dim net_amount As Double
-                    Select Case VAT.ToUpper
-                        Case "NON-VAT", "VAT-EX" 'VAT Exclusive
+                    Select Case VAT
+                        Case VATTypeChoices.NON_VAT, VATTypeChoices.VAT_EX 'VAT Exclusive
                             net_amount = Amount * 0.12
-                        Case "VAT-INC" 'VAT Inclusive
-                            net_amount = (Amount / 1.12)
+                        Case VATTypeChoices.VAT_INC 'VAT Inclusive
+                            net_amount = Amount / 1.12
                     End Select
 
                     Return net_amount * W_TAX
@@ -40,6 +40,11 @@ Namespace Model
             End Get
         End Property
 
-    End Class
 
+        Public Enum VATTypeChoices
+            NON_VAT
+            VAT_EX
+            VAT_INC
+        End Enum
+    End Class
 End Namespace

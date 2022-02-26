@@ -38,6 +38,7 @@ Module SharedObject
     Public Enum ProcessTypeChoices
         SETUP
         STAND_BY
+        BUSY
     End Enum
 
 End Module

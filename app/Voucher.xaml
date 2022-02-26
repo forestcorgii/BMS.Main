@@ -176,7 +176,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Search:" VerticalAlignment="Center" Style="{StaticResource SubHeader}"/>
                 <WindowsFormsHost Height="22" Margin="8" VerticalAlignment="Center" Width="400">
-                    <wf:TextBox x:Name="tbSearch" Height="25" BorderStyle="FixedSingle"/>
+                    <wf:TextBox x:Name="tbSearch" Height="25" BorderStyle="FixedSingle" CharacterCasing="Upper"/>
                 </WindowsFormsHost>
             </StackPanel>
 

@@ -15,7 +15,7 @@ Class Home
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        LoadVoucherSchedules()
+        ' LoadVoucherSchedules()
     End Sub
 
     Private Sub LoadVoucherSchedules()

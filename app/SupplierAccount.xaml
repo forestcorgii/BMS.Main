@@ -47,7 +47,7 @@
                     <TextBox x:Name="tbAccountNumber" Style="{StaticResource RegularTextBox}"/>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <!--<StackPanel Orientation="Horizontal">
                 <StackPanel>
                     <TextBlock Text="Company:" HorizontalAlignment="Left"  Style="{StaticResource RegularTextBlock}"/>
                     <ComboBox x:Name="cbCompany" Style="{StaticResource RegularComboBox}"/>
@@ -57,8 +57,8 @@
                     <TextBlock Text="Bank Account: " HorizontalAlignment="Left"  Style="{StaticResource RegularTextBlock}"/>
                     <ComboBox x:Name="cbBankAccount" Style="{StaticResource RegularComboBox}"/>
                 </StackPanel>
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Left">
+            </StackPanel>-->
+            <!--<StackPanel HorizontalAlignment="Left">
                 <TextBlock Text="Default Particulars:" HorizontalAlignment="Left" Style="{StaticResource RegularTextBlock}"/>
                 <DataGrid x:Name="lstParticulars"
                           AutoGenerateColumns="False"
@@ -80,7 +80,7 @@
                         <DataGridTextColumn Header="Value" Width="270" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </StackPanel>
+            </StackPanel>-->
 
             <Button Click="btnAddSupplierAccount_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="6,0" Height="25">
                 <Button.Content>
@@ -125,10 +125,10 @@
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Width="75" Binding="{Binding Id}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Supplier Name" Width="100" Binding="{Binding Supplier_Name}"/>
+                <DataGridTextColumn Header="Supplier Name" Width="100" Binding="{Binding Supplier_Payee}"/>
                 <DataGridTextColumn Header="Account Number" Width="150" Binding="{Binding Account_Number}"/>
-                <DataGridTextColumn Header="Company Name" Width="150" Binding="{Binding Company_Name}"/>
-                <DataGridTextColumn Header="Company Bank Account Number" Width="150" Binding="{Binding Company_Bank_Account_Number}"/>
+                <!--<DataGridTextColumn Header="Company Name" Width="150" Binding="{Binding Company_Name}"/>-->
+                <!--<DataGridTextColumn Header="Company Bank Account Number" Width="150" Binding="{Binding Company_Bank_Account_Number}"/>-->
             </DataGrid.Columns>
         </DataGrid>
  

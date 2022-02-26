@@ -158,6 +158,8 @@ Namespace Controller
                     If reader.HasRows Then
                         reader.Read()
                         voucher.Company = New Model.Company(reader)
+                        voucher.Company_Name = reader.Item("name")
+                    Else : voucher.Company = New Model.Company
                     End If
                 End Using
 
@@ -165,6 +167,8 @@ Namespace Controller
                     If reader.HasRows Then
                         reader.Read()
                         voucher.Bank_Account = New Model.CompanyBankAccount(reader)
+                        voucher.Bank_Account_Code = reader.Item("code")
+                    Else : voucher.Bank_Account = New Model.CompanyBankAccount
                     End If
                 End Using
 
@@ -172,15 +176,21 @@ Namespace Controller
                     If reader.HasRows Then
                         reader.Read()
                         voucher.Supplier = New Model.Supplier(reader)
+                        voucher.Supplier_Payee = reader.Item("payee")
+                    Else : voucher.Supplier = New Model.Supplier
                     End If
                 End Using
 
-                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("select * from voucher_entry.supplier_account_complete where id={0}", voucher.Supplier_Account_Id))
-                    If reader.HasRows Then
-                        reader.Read()
-                        voucher.Supplier_Account = New Model.SupplierAccount(reader)
-                    End If
-                End Using
+                If voucher.Supplier_Account_Id > 0 Then
+                    Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("select * from voucher_entry.supplier_account where id={0}", voucher.Supplier_Account_Id))
+                        If reader.HasRows Then
+                            reader.Read()
+                            voucher.Supplier_Account = New Model.SupplierAccount(reader)
+                            voucher.Supplier_Account_Number = reader.Item("account_number")
+                        End If
+                    End Using
+                Else : voucher.Supplier_Account = New Model.SupplierAccount
+                End If
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "CompleteVoucherDetail", MessageBoxButton.OK, MessageBoxImage.Error)
             End Try
@@ -203,39 +213,82 @@ Namespace Controller
             End Try
         End Sub
 
-        Public Shared Function LoadVouchers(databaseManager As Manager.Mysql, Optional searchString As String = "", Optional companyName As String = "", Optional supplierPayee As String = "", Optional completeDetail As Boolean = False) As ObservableCollection(Of Model.Voucher)
-            Dim query As String = "SELECT * FROM `voucher_entry`.voucher_complete;"
-            If searchString <> "" Or companyName <> "" Or supplierPayee <> "" Then
-                Dim conjunction As String = ""
-                If searchString <> "" Then
-                    query = String.Format("SELECT * FROM `voucher_entry`.voucher_complete where voucher_no like '%{0}%' or company_name like '{0}' or supplier_payee like '{0}' or supplier_account_number like '%{0}%' or bank_account_code like '%{0}%'", searchString) : conjunction = "and"
-                Else
-                    query = String.Format("SELECT * FROM `voucher_entry`.voucher_complete where", searchString)
-                End If
-
-                If companyName <> "" Then
-                    query &= String.Format(" {0} company_name like '%{1}%'", conjunction, companyName) : conjunction = "and"
-                End If
-                If supplierPayee <> "" Then
-                    query &= String.Format(" {0} supplier_payee like '%{1}%'", conjunction, supplierPayee)
-                End If
-            End If
-
-            Dim Vouchers As New ObservableCollection(Of Model.Voucher)
+        Public Shared Function LoadVouchers(databaseManager As Manager.Mysql, Optional searchString As String = "", Optional completeDetail As Boolean = False) As ObservableCollection(Of Model.Voucher)
+            Dim query As String = "SELECT * FROM `voucher_entry`.voucher;"
+            Dim Vouchers As New List(Of Model.Voucher)
             Try
                 Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(query)
                     If reader.HasRows Then
                         While reader.Read
                             Dim _voucher As New Model.Voucher(reader)
-                            If completeDetail Then CompleteVoucherDetail(_voucher, databaseManager)
                             Vouchers.Add(_voucher)
                         End While
                     End If
                 End Using
+
+                If completeDetail Then Vouchers.ForEach(Sub(item As Model.Voucher) CompleteVoucherDetail(item, databaseManager))
+                If Vouchers.Count > 0 And searchString <> "" Then
+
+                    Vouchers = (From res In Vouchers Where res.Voucher_No.Contains(searchString) Or
+                                                            res.Company_Name.Contains(searchString) Or
+                                                            res.Supplier_Payee.Contains(searchString) Or
+                                                            (res.Supplier_Account_Number IsNot Nothing AndAlso res.Supplier_Account_Number.Contains(searchString)) Or
+                                                            res.Bank_Account_Code.Contains(searchString) Select res).ToList
+                End If
+
             Catch ex As Exception
-                MessageBox.Show(ex.Message, "ChangePrintStatus", MessageBoxButton.OK, MessageBoxImage.Error)
+                MessageBox.Show(ex.Message, "LoadVouchers", MessageBoxButton.OK, MessageBoxImage.Error)
             End Try
-            Return Vouchers
+            Return New ObservableCollection(Of Model.Voucher)(Vouchers)
+        End Function
+
+        ''' <summary>
+        ''' Removes raw values and leaving foreign keys for a leaner byte size.
+        ''' </summary>
+        ''' <param name="voucher"></param>
+        ''' <returns></returns>
+        Public Shared Function ToTemplate(voucher As Model.Voucher) As Model.Voucher
+            Dim newVoucher As New Model.Voucher
+            newVoucher.Company_Id = voucher.Company_Id Or voucher.Company.Id
+            newVoucher.Bank_Account_Id = voucher.Bank_Account_Id Or voucher.Bank_Account.Id
+            newVoucher.Supplier_Id = voucher.Supplier_Id Or voucher.Supplier.Id
+            newVoucher.Supplier_Account_Id = voucher.Supplier_Account_Id Or voucher.Supplier_Account.Id
+
+            With newVoucher
+                .Journal_Account_Distributions = voucher.Journal_Account_Distributions
+                .Particulars = voucher.Particulars
+                .Journal_Account_Distributions = voucher.Journal_Account_Distributions
+                .Remarks = voucher.Remarks
+            End With
+
+            Return newVoucher
+        End Function
+        ''' <summary>
+        ''' Removes foreign keys to ensure that the voucher will remain static.
+        ''' </summary>
+        ''' <param name="voucher"></param>
+        ''' <returns></returns>
+        Public Shared Function ToRaw(voucher As Model.Voucher) As Model.Voucher
+            Dim newVoucher As Model.Voucher = voucher
+            With newVoucher
+                .Approved_By = Nothing
+                .Approved_By_Fullname = Nothing
+                .Certified_By = Nothing
+                .Certified_By_Fullname = Nothing
+                .Prepared_By = Nothing
+                .Prepared_By_Fullname = Nothing
+                .Received_By = Nothing
+                .Id = Nothing
+                .Bank_Account = Nothing
+                .Bank_Account_Id = Nothing
+                .Company = Nothing
+                .Company_Id = Nothing
+                .Supplier_Account = Nothing
+                .Supplier_Account_Id = Nothing
+                .Supplier = Nothing
+                .Supplier_Id = Nothing
+            End With
+            Return voucher
         End Function
     End Class
 End Namespace

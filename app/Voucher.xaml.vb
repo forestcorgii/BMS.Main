@@ -20,12 +20,8 @@ Class Voucher
         DatabaseManager.Connection.Open()
         LoadVouchers()
         DatabaseManager.Connection.Close()
-        'cbCompany.SelectedIndex = 0
-        'cbSupplier.SelectedIndex = 0
     End Sub
     Private Function SetupAutoComplete()
-        'cbCompany.Items.Clear()
-        'cbSupplier.Items.Clear()
         DatabaseManager.Connection.Open()
         Dim _companies As List(Of Model.Company) = Controller.Company.LoadCompanies(DatabaseManager).ToList
         Dim _suppliers As List(Of Model.Supplier) = Controller.Supplier.LoadSuppliers(DatabaseManager).ToList
@@ -33,6 +29,7 @@ Class Voucher
 
         Dim autoCompleteSource As New Forms.AutoCompleteStringCollection
         For Each _supplier As Model.Supplier In _suppliers
+            autoCompleteSource.Add(_supplier.Payee)
             autoCompleteSource.Add(_supplier.Name)
         Next
         For Each _company As Model.Company In _companies
@@ -47,7 +44,7 @@ Class Voucher
         Return True
     End Function
     Private Sub LoadVouchers()
-        lstVoucher.ItemsSource = Controller.Voucher.LoadVouchers(DatabaseManager, tbSearch.Text)
+        lstVoucher.ItemsSource = Controller.Voucher.LoadVouchers(DatabaseManager, tbSearch.Text, completeDetail:=True)
     End Sub
 
     Private Sub btnPrint_Click(sender As Object, e As RoutedEventArgs)
@@ -70,9 +67,9 @@ Class Voucher
         Try
             Dim newVoucherTemplate As New Model.VoucherTemplate
             With newVoucherTemplate
-                selectedVoucher.Id = 0
-                .Voucher = selectedVoucher
-                .Remarks = ""
+                .Voucher = Controller.Voucher.ToTemplate(selectedVoucher)
+                .Supplier_Id = selectedVoucher.Supplier_Id
+                .Supplier_Account_Id = selectedVoucher.Supplier_Account_Id
                 .ChangeState = States.ChangeState.Added
 
                 Controller.VoucherTemplate.SaveVoucherTemplate(newVoucherTemplate, DatabaseManager.Connection)

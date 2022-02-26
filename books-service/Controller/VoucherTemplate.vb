@@ -9,25 +9,27 @@ Namespace Controller
 
         Public Shared Function SaveVoucherTemplate(voucherTemplate As Model.VoucherTemplate, conn As MySqlConnection)
             Try
-                Dim _name As String = String.Format("{0}({1})", voucherTemplate.Voucher.Supplier.Payee, voucherTemplate.Voucher.Supplier_Account.Account_Number)
                 Dim query As String = ""
                 Dim command As New MySqlCommand()
                 If voucherTemplate.ChangeState = States.ChangeState.Added Then
-                    query = "insert into `voucher_entry`.`voucher_template` (name,voucher_json,remarks)values(@name,@voucher_json,@remarks)"
+                    query = "insert into `voucher_entry`.`voucher_template` (supplier_id,supplier_account_id,voucher_json)values(@supplier_id,@supplier_account_id,@voucher_json)"
                 ElseIf voucherTemplate.ChangeState = States.ChangeState.Deleted Then
                     query = "delete from `voucher_entry`.`voucher_template` where id=@id;"
                     command.Parameters.AddWithValue("id", voucherTemplate.Id)
                 ElseIf voucherTemplate.ChangeState = States.ChangeState.None Then
-                    query = "replace into `voucher_entry`.`voucher_template` (id,name,voucher_json,remarks)values(@id,@name,@voucher_json,@remarks)"
+                    query = "replace into `voucher_entry`.`voucher_template` (id,supplier_id,supplier_account_id,voucher_json)values(@id,@supplier_id,@supplier_account_id,@voucher_json)"
                     command.Parameters.AddWithValue("id", voucherTemplate.Id)
                 End If
 
                 If voucherTemplate.ChangeState <> States.ChangeState.Deleted Then
-                    command.Parameters.AddWithValue("name", _name)
-                    command.Parameters.AddWithValue("remarks", voucherTemplate.Remarks)
+                    command.Parameters.AddWithValue("supplier_id", voucherTemplate.Supplier_Id)
+                    command.Parameters.AddWithValue("supplier_account_id", voucherTemplate.Supplier_Account_Id)
 
                     voucherTemplate.Voucher.Id = 0
-                    command.Parameters.AddWithValue("voucher_json", JsonConvert.SerializeObject(voucherTemplate.Voucher, Formatting.Indented))
+                    Dim settings As New JsonSerializerSettings
+                    settings.NullValueHandling = NullValueHandling.Ignore
+                    settings.DefaultValueHandling = DefaultValueHandling.Ignore
+                    command.Parameters.AddWithValue("voucher_json", JsonConvert.SerializeObject(voucherTemplate.Voucher, Formatting.Indented, settings))
                 End If
 
                 command.CommandText = query
@@ -57,6 +59,23 @@ Namespace Controller
             End Try
 
             Return voucherTemplates
+        End Function
+
+        Public Shared Function GetTemplate(databaseManager As Manager.Mysql, supplier_id As Integer, supplier_account_id As Integer) As Model.VoucherTemplate
+            Dim template As Model.VoucherTemplate = Nothing
+
+            Try
+                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("SELECT * FROM `voucher_entry`.voucher_template WHERE supplier_id={0} OR (supplier_id={0} AND supplier_account_id={1}) ORDER BY `timestamp` DESC LIMIT 1;", supplier_id, supplier_account_id))
+                    If reader.HasRows Then
+                        reader.Read()
+                        template = New Model.VoucherTemplate(reader)
+                    End If
+                End Using
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "LoadVoucherTemplates", MessageBoxButton.OK, MessageBoxImage.Error)
+            End Try
+
+            Return template
         End Function
     End Class
 End Namespace
