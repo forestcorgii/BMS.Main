@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:app"
+      xmlns:local="clr-namespace:app" xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="900"
       Title="Printer">
@@ -32,21 +32,16 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Search:" VerticalAlignment="Center" Style="{StaticResource SubHeader}"/>
-                <TextBox x:Name="tbSearch" TextChanged="tbSearch_TextChanged" LostFocus="tbSearch_LostFocus" Width="200" Margin="8" VerticalAlignment="Center"/>
+                <WindowsFormsHost Height="22" Margin="8" VerticalAlignment="Center" Width="400">
+                    <wf:TextBox x:Name="tbSearch" Height="25" BorderStyle="FixedSingle" CharacterCasing="Upper"/>
+                </WindowsFormsHost>
             </StackPanel>
-            <ComboBox x:Name="cbCompany" Width="175" Margin="4" VerticalAlignment="Center" Text="ALL COMPANIES">
-                <ComboBoxItem>ALL COMPANIES</ComboBoxItem>
-            </ComboBox>
-            <ComboBox x:Name="cbSupplier" Width="175" Margin="4" VerticalAlignment="Center" Text="ALL SUPPLIER">
-                <ComboBoxItem>ALL SUPPLIER</ComboBoxItem>
-            </ComboBox>
-             <Button x:Name="btnSearch" Click="btnSearch_Click" Style="{StaticResource SecondaryButton}">Search</Button>
+            <Button x:Name="btnSearch" Click="btnSearch_Click" Style="{StaticResource SecondaryButton}">Search</Button>
             <StackPanel Orientation="Horizontal">
             </StackPanel>
+            <CheckBox x:Name="chbSelectAll" Checked="chbSelectAll_Checked" Unchecked="chbSelectAll_UnChecked" Grid.Row="1" Margin="8" Content="Select All" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         </StackPanel>
-
-        <CheckBox x:Name="chbSelectAll" Checked="chbSelectAll_Checked" Unchecked="chbSelectAll_UnChecked" Grid.Row="1" Margin="8" Content="Select All" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-
+        
         <DataGrid x:Name="lstVoucher" 
                   AutoGenerateColumns="False"
                   Grid.Row="2"

@@ -91,20 +91,9 @@ Class Voucher
         NavigationService.Navigate(New VoucherSchedule())
     End Sub
 
-    Private Sub tbSearch_TextChanged(sender As Object, e As TextChangedEventArgs)
-        '     If Not DatabaseManager.Connection.State = System.Data.ConnectionState.Open Then DatabaseManager.Connection.Open()
-
-        'LoadVouchers()
-    End Sub
-
-    Private Sub tbSearch_LostFocus(sender As Object, e As RoutedEventArgs)
-        If DatabaseManager.Connection.State = System.Data.ConnectionState.Open Then DatabaseManager.Connection.Close()
-    End Sub
-
     Private Sub btnPrintVoucher_Click(sender As Object, e As RoutedEventArgs)
         NavigationService.Navigate(New Printer)
     End Sub
-
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs)
         DatabaseManager.Connection.Open()

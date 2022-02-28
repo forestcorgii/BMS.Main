@@ -17,75 +17,32 @@ Class Printer
         LoadVouchers()
         DatabaseManager.Connection.Close()
 
-        cbCompany.SelectedIndex = 0
-        cbSupplier.SelectedIndex = 0
     End Sub
     Private Function SetupAutoComplete()
         DatabaseManager.Connection.Open()
-        Try
-            Using reader As MySqlDataReader = DatabaseManager.ExecuteDataReader("SELECT * FROM `voucher_entry`.company;")
-                If reader.HasRows Then
-                    While reader.Read
-                        cbCompany.Items.Add(reader.Item("name"))
-                    End While
-                Else : MessageBox.Show("There is no available Company to select, please finish setting up.", "", MessageBoxButton.OK, MessageBoxImage.Error)
-                End If
-            End Using
-
-            Dim autoCompleteSource As New Forms.AutoCompleteStringCollection
-            Using reader As MySqlDataReader = DatabaseManager.ExecuteDataReader("SELECT * FROM `voucher_entry`.supplier;")
-                If reader.HasRows Then
-                    While reader.Read
-                        cbSupplier.Items.Add(reader.Item("payee"))
-                    End While
-                Else : MessageBox.Show("There is no available Supplier to select, please finish setting up.", "", MessageBoxButton.OK, MessageBoxImage.Error)
-                End If
-            End Using
-        Catch ex As Exception
-            Return False
-        End Try
-
+        Dim _companies As List(Of Model.Company) = Controller.Company.LoadCompanies(DatabaseManager).ToList
+        Dim _suppliers As List(Of Model.Supplier) = Controller.Supplier.LoadSuppliers(DatabaseManager).ToList
         DatabaseManager.Connection.Close()
+
+        Dim autoCompleteSource As New Forms.AutoCompleteStringCollection
+        For Each _supplier As Model.Supplier In _suppliers
+            autoCompleteSource.Add(_supplier.Payee)
+            autoCompleteSource.Add(_supplier.Name)
+        Next
+        For Each _company As Model.Company In _companies
+            autoCompleteSource.Add(_company.Name)
+        Next
+        With tbSearch
+            .AutoCompleteCustomSource = autoCompleteSource
+            .AutoCompleteMode = Forms.AutoCompleteMode.SuggestAppend
+            .AutoCompleteSource = Forms.AutoCompleteSource.CustomSource
+        End With
 
         Return True
     End Function
     Private Sub LoadVouchers()
-        Dim query As String = "SELECT * FROM `voucher_entry`.voucher_complete WHERE print_status = 0;"
-        If tbSearch.Text <> "" Or cbCompany.SelectedIndex > 0 Or cbSupplier.SelectedIndex > 0 Then
-            Dim conjunction As String = ""
-            If tbSearch.Text <> "" Then
-                query = String.Format("SELECT * FROM `voucher_entry`.voucher_complete where voucher_no like '%{0}%' or supplier_account_number like '%{0}%' or bank_account_code like '%{0}%'", tbSearch.Text) : conjunction = "and"
-            Else
-                query = String.Format("SELECT * FROM `voucher_entry`.voucher_complete where", tbSearch.Text)
-            End If
-
-            If cbCompany.SelectedIndex > 0 Then
-                query &= String.Format(" {0} company_name like '%{1}%'", conjunction, cbCompany.Text) : conjunction = "and"
-            End If
-            If cbSupplier.SelectedIndex > 0 Then
-                query &= String.Format(" {0} supplier_payee like '%{1}%'", conjunction, cbSupplier.Text) : conjunction = "and"
-            End If
-
-            query &= String.Format(" {0} print_status = 0", conjunction)
-        End If
-
-        Vouchers = New ObservableCollection(Of Model.Voucher)
-        Try
-            Using reader As MySqlDataReader = DatabaseManager.ExecuteDataReader(query)
-                If reader.HasRows Then
-                    While reader.Read
-                        Vouchers.Add(New Model.Voucher(reader))
-                    End While
-                Else 'prompt to add company
-                End If
-            End Using
-
-            lstVoucher.ItemsSource = Vouchers
-        Catch ex As Exception
-            Console.WriteLine(ex.Message)
-        End Try
+        lstVoucher.ItemsSource = Controller.Voucher.LoadVouchers(DatabaseManager, tbSearch.Text, completeDetail:=True)
     End Sub
-
 
     Private Sub btnGoBack_Click(sender As Object, e As RoutedEventArgs)
         NavigationService.GoBack()
@@ -96,15 +53,6 @@ Class Printer
     End Sub
     Private Sub chbSelectAll_UnChecked(sender As Object, e As RoutedEventArgs)
         lstVoucher.UnselectAll()
-    End Sub
-    Private Sub tbSearch_TextChanged(sender As Object, e As TextChangedEventArgs)
-        If Not DatabaseManager.Connection.State = System.Data.ConnectionState.Open Then DatabaseManager.Connection.Open()
-
-        LoadVouchers()
-    End Sub
-
-    Private Sub tbSearch_LostFocus(sender As Object, e As RoutedEventArgs)
-        If DatabaseManager.Connection.State = System.Data.ConnectionState.Open Then DatabaseManager.Connection.Close()
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs)
