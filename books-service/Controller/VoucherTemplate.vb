@@ -61,14 +61,14 @@ Namespace Controller
             Return voucherTemplates
         End Function
 
-        Public Shared Function GetTemplate(databaseManager As Manager.Mysql, supplier_id As Integer, supplier_account_id As Integer) As Model.VoucherTemplate
-            Dim template As Model.VoucherTemplate = Nothing
+        Public Shared Function GetTemplate(databaseManager As Manager.Mysql, supplier_id As Integer, supplier_account_id As Integer) As Model.Voucher
+            Dim template As Model.Voucher = Nothing
 
             Try
-                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("SELECT * FROM `voucher_entry`.voucher_template WHERE supplier_id={0} OR (supplier_id={0} AND supplier_account_id={1}) ORDER BY `timestamp` DESC LIMIT 1;", supplier_id, supplier_account_id))
+                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("SELECT * FROM `voucher_entry`.voucher WHERE supplier_id={0} OR (supplier_id={0} AND supplier_account_id={1}) ORDER BY `timestamp` DESC LIMIT 1;", supplier_id, supplier_account_id))
                     If reader.HasRows Then
                         reader.Read()
-                        template = New Model.VoucherTemplate(reader)
+                        template = New Model.Voucher(reader, True)
                     End If
                 End Using
             Catch ex As Exception

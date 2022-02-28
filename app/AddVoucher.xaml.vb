@@ -207,7 +207,7 @@ Class AddVoucher
         If tbSupplierAccount.TextLength > 5 And Mode <> ProcessTypeChoices.BUSY Then
             DatabaseManager.Connection.Open()
             Mode = ProcessTypeChoices.BUSY
-            Dim template As Model.VoucherTemplate = Nothing
+            Dim template As Model.Voucher = Nothing
             Try
                 Dim supplierAccount_args As String() = tbSupplierAccount.Text.Split("-")
 
@@ -223,8 +223,8 @@ Class AddVoucher
             Mode = ProcessTypeChoices.STAND_BY
 
             If template IsNot Nothing Then
-                Controller.Voucher.CompleteVoucherDetail(template.Voucher, DatabaseManager)
-                PopulateVoucher(template.Voucher)
+                Controller.Voucher.CompleteVoucherDetail(template, DatabaseManager)
+                PopulateVoucher(template)
             End If
 
             DatabaseManager.Connection.Close()
@@ -235,13 +235,12 @@ Class AddVoucher
             DatabaseManager.Connection.Open()
             Mode = ProcessTypeChoices.BUSY
 
-            Dim template As Model.VoucherTemplate = Nothing
+            Dim template As Model.Voucher = Nothing
             Try
                 Dim supplier_args As String() = tbSupplier.Text.Split("-")
                 Supplier = Controller.Supplier.GetSupplier(supplier_args(0).Trim, supplier_args(1).Trim, DatabaseManager)
                 If Supplier IsNot Nothing Then
                     template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, Supplier.Id, 0)
-
                 End If
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "tbSupplier_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
@@ -250,8 +249,8 @@ Class AddVoucher
             Mode = ProcessTypeChoices.STAND_BY
 
             If template IsNot Nothing Then
-                Controller.Voucher.CompleteVoucherDetail(template.Voucher, DatabaseManager)
-                PopulateVoucher(template.Voucher)
+                Controller.Voucher.CompleteVoucherDetail(template, DatabaseManager)
+                PopulateVoucher(template)
             End If
             DatabaseManager.Connection.Close()
         End If
@@ -287,7 +286,7 @@ Class AddVoucher
         DatabaseManager.Connection.Open()
 
         If Supplier IsNot Nothing And SupplierAccount.Account_Number Is Nothing And tbSupplierAccount.Text <> "" Then
-            If MessageBox.Show(String.Format("Account Number does not exist. It will be saved with Supplier {0}, Proceed?", Supplier.Name), "Save as Template", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) Then
+            If MessageBox.Show(String.Format("Account Number does not exist under {0}. It will be saved if You proceed, Proceed?", Supplier.Name), "Save as new Supplier Account", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) Then
                 SupplierAccount = New Model.SupplierAccount() With {.Supplier = Supplier, .Account_Number = tbSupplierAccount.Text}
                 Controller.SupplierAccount.SaveSupplierAccount(SupplierAccount, DatabaseManager.Connection)
                 SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, SupplierAccount.Account_Number, SupplierAccount.Supplier.Id)

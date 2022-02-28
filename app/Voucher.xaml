@@ -83,7 +83,7 @@
                                 </Grid>
                             </Button.Content>
                         </Button>
-                        <Button Click="btnViewDetail_Click" Grid.Column="1" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0">
+                        <!--<Button Click="btnViewDetail_Click" Grid.Column="1" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0">
                             <Button.Content>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -106,7 +106,7 @@
                                     <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Add to Template"/>
                                 </Grid>
                             </Button.Content>
-                        </Button>
+                        </Button>-->
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -142,11 +142,11 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="0" Source="assets/timer.png" VerticalAlignment="Center" />
-                            <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Scheduled Voucher"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Voucher Reminder"/>
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Click="btnVoucherTemplate_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0">
+                <Button Click="btnVoucherTemplate_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0" Visibility="Collapsed">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>

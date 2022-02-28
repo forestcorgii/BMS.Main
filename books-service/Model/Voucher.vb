@@ -91,8 +91,9 @@ Namespace Model
         Sub New()
         End Sub
 
-        Sub New(reader As MySql.Data.MySqlClient.MySqlDataReader)
-            Id = reader.Item("id")
+        Sub New(reader As MySql.Data.MySqlClient.MySqlDataReader, Optional noId As Boolean = False)
+            If noId = False Then Id = reader.Item("id")
+
             Voucher_No = reader.Item("voucher_no")
             Entry_Date = reader.Item("Entry_Date")
             'Company_Name = reader.Item("Company_Name")

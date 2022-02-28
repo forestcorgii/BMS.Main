@@ -42,7 +42,7 @@
             </Button.Content>
         </Button>
 
-        <Button Click="btnAddSupplierAccount_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0">
+        <Button Click="btnAddSupplierAccount_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0" Visibility="Collapsed">
             <Button.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
