@@ -328,17 +328,17 @@ Class AddVoucher
                 If EditMode = EditModeChoices.Voucher Then Controller.Voucher.SaveVoucher(newVoucher, DatabaseManager.Connection, User)
             End With
 
-            If MessageBox.Show("Add Voucher as Template?", "Save as Template", MessageBoxButton.YesNo, MessageBoxImage.Question) Then
-                Dim newVoucherTemplate As New Model.VoucherTemplate
-                With newVoucherTemplate
-                    .Voucher = Controller.Voucher.ToTemplate(newVoucher)
-                    .Supplier_Id = newVoucher.Supplier_Id
-                    .Supplier_Account_Id = newVoucher.Supplier_Account_Id
-                    .ChangeState = States.ChangeState.Added
+            'If MessageBox.Show("Add Voucher as Template?", "Save as Template", MessageBoxButton.YesNo, MessageBoxImage.Question) Then
+            '    Dim newVoucherTemplate As New Model.VoucherTemplate
+            '    With newVoucherTemplate
+            '        .Voucher = Controller.Voucher.ToTemplate(newVoucher)
+            '        .Supplier_Id = newVoucher.Supplier_Id
+            '        .Supplier_Account_Id = newVoucher.Supplier_Account_Id
+            '        .ChangeState = States.ChangeState.Added
 
-                    Controller.VoucherTemplate.SaveVoucherTemplate(newVoucherTemplate, DatabaseManager.Connection)
-                End With
-            End If
+            '        Controller.VoucherTemplate.SaveVoucherTemplate(newVoucherTemplate, DatabaseManager.Connection)
+            '    End With
+            'End If
 
             NavigationService.GoBack()
         Catch ex As Exception
