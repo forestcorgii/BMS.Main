@@ -49,7 +49,7 @@ Class Voucher
 
     Private Sub btnPrint_Click(sender As Object, e As RoutedEventArgs)
         Console.WriteLine(lstVoucher.SelectedItem)
-        Controller.Voucher.Print(lstVoucher.SelectedItem, System.AppDomain.CurrentDomain.BaseDirectory)
+        Controller.Voucher.Print(lstVoucher.SelectedItem, New IO.DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent.FullName & "\Data\")
     End Sub
 
     Private Sub btnViewDetail_Click(sender As Object, e As RoutedEventArgs)
