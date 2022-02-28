@@ -42,7 +42,7 @@ Class AddVoucher
         End Get
         Set(value As Model.Supplier)
             __Supplier = value
-            If value.Name <> "" Then tbSupplier.Text = value.ToString
+            If value IsNot Nothing AndAlso value.Name <> "" Then tbSupplier.Text = value.ToString
         End Set
     End Property
 
@@ -135,7 +135,7 @@ Class AddVoucher
 
         With tbSupplier
             .AutoCompleteCustomSource = autoCompleteSource
-            .AutoCompleteMode = Forms.AutoCompleteMode.SuggestAppend
+            .AutoCompleteMode = Forms.AutoCompleteMode.Suggest
             .AutoCompleteSource = Forms.AutoCompleteSource.CustomSource
         End With
 
@@ -147,7 +147,7 @@ Class AddVoucher
 
         With tbSupplierAccount
             .AutoCompleteCustomSource = autoCompleteSource
-            .AutoCompleteMode = Forms.AutoCompleteMode.SuggestAppend
+            .AutoCompleteMode = Forms.AutoCompleteMode.Suggest
             .AutoCompleteSource = Forms.AutoCompleteSource.CustomSource
         End With
 
@@ -188,7 +188,7 @@ Class AddVoucher
     End Sub
 
     Private Sub cbCompany_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbCompany.SelectionChanged
-        If e.AddedItems.Count > 0 And Not Mode = ProcessTypeChoices.BUSY Then
+        If e.AddedItems.Count > 0 Then
             Dim ConnectionIsOpenedFromOutside As Boolean = DatabaseManager.Connection.State = System.Data.ConnectionState.Open
             If Not ConnectionIsOpenedFromOutside Then DatabaseManager.Connection.Open()
 
@@ -203,58 +203,64 @@ Class AddVoucher
         End If
     End Sub
 
-    Private Sub tbSupplierAccount_TextChanged(sender As Object, e As EventArgs) Handles tbSupplierAccount.LostFocus
+    Private Sub tbSupplierAccount_TextChanged(sender As Object, e As EventArgs) Handles tbSupplierAccount.TextChanged
         If tbSupplierAccount.TextLength > 5 And Mode <> ProcessTypeChoices.BUSY Then
-            DatabaseManager.Connection.Open()
             Mode = ProcessTypeChoices.BUSY
-            Dim template As Model.Voucher = Nothing
-            Try
-                Dim supplierAccount_args As String() = tbSupplierAccount.Text.Split("-")
+            Dim supplierAccount_args As String() = tbSupplierAccount.Text.Split("-")
+            If supplierAccount_args.Length > 1 Then 'tbSupplierAccount format for getting supplier detail is not yet valid.
+                DatabaseManager.Connection.Open()
+                Dim template As Model.Voucher = Nothing
+                Try
 
-                SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, supplierAccount_args(0).Trim, supplierAccount_args(1).Trim)
+                    SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, supplierAccount_args(0).Trim, supplierAccount_args(1).Trim)
 
-                If SupplierAccount IsNot Nothing Then
-                    template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, SupplierAccount.Supplier_Id, SupplierAccount.Id)
+                    If SupplierAccount IsNot Nothing Then
+                        template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, SupplierAccount.Supplier_Id, SupplierAccount.Id)
+                    End If
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "tbSupplierAccount_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
+                End Try
+
+
+                If template IsNot Nothing Then
+                    Controller.Voucher.CompleteVoucherDetail(template, DatabaseManager)
+                    PopulateVoucher(template)
                 End If
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "tbSupplierAccount_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
-            End Try
 
-            Mode = ProcessTypeChoices.STAND_BY
-
-            If template IsNot Nothing Then
-                Controller.Voucher.CompleteVoucherDetail(template, DatabaseManager)
-                PopulateVoucher(template)
+                DatabaseManager.Connection.Close()
             End If
-
-            DatabaseManager.Connection.Close()
+            Mode = ProcessTypeChoices.STAND_BY
         End If
     End Sub
-    Private Sub tbSupplier_TextChanged(sender As Object, e As EventArgs) Handles tbSupplier.LostFocus
+    Private Sub tbSupplier_TextChanged(sender As Object, e As EventArgs) Handles tbSupplier.TextChanged
         If tbSupplier.TextLength > 5 And Mode <> ProcessTypeChoices.BUSY Then
-            DatabaseManager.Connection.Open()
             Mode = ProcessTypeChoices.BUSY
+            Dim supplier_args As String() = tbSupplier.Text.Split("-")
+            If supplier_args.Length > 1 Then  'tbSupplier format for getting supplier detail is not yet valid.
+                DatabaseManager.Connection.Open()
 
-            Dim template As Model.Voucher = Nothing
-            Try
-                Dim supplier_args As String() = tbSupplier.Text.Split("-")
-                Supplier = Controller.Supplier.GetSupplier(supplier_args(0).Trim, supplier_args(1).Trim, DatabaseManager)
-                If Supplier IsNot Nothing Then
-                    template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, Supplier.Id, 0)
+                Dim template As Model.Voucher = Nothing
+                Try
+                    Supplier = Controller.Supplier.GetSupplier(supplier_args(0).Trim, supplier_args(1).Trim, DatabaseManager)
+                    If Supplier IsNot Nothing Then
+                        template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, Supplier.Id, 0)
+                    End If
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "tbSupplier_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
+                End Try
+
+
+                If template IsNot Nothing Then
+                    Controller.Voucher.CompleteVoucherDetail(template, DatabaseManager)
+
+                    tbSupplierAccount.Text = ""
+                    PopulateVoucher(template)
                 End If
-            Catch ex As Exception
-                MessageBox.Show(ex.Message, "tbSupplier_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
-            End Try
 
-            Mode = ProcessTypeChoices.STAND_BY
-
-            If template IsNot Nothing Then
-                Controller.Voucher.CompleteVoucherDetail(template, DatabaseManager)
-                PopulateVoucher(template)
+                DatabaseManager.Connection.Close()
             End If
-            DatabaseManager.Connection.Close()
+            Mode = ProcessTypeChoices.STAND_BY
         End If
-
     End Sub
 
     Private Sub btnAddJournalAccount_Click(sender As Object, e As RoutedEventArgs)
