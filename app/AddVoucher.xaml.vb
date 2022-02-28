@@ -158,8 +158,6 @@ Class AddVoucher
     End Function
 
     Private Sub SetupVAT()
-        Dim vatRate As Double = 0.12
-
         cbVATType.ItemsSource = [Enum].GetValues(GetType(Model.JournalAccountDistributionItem.VATTypeChoices))
     End Sub
 
@@ -211,7 +209,6 @@ Class AddVoucher
                 DatabaseManager.Connection.Open()
                 Dim template As Model.Voucher = Nothing
                 Try
-
                     SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, supplierAccount_args(0).Trim, supplierAccount_args(1).Trim)
 
                     If SupplierAccount IsNot Nothing Then
@@ -220,7 +217,6 @@ Class AddVoucher
                 Catch ex As Exception
                     MessageBox.Show(ex.Message, "tbSupplierAccount_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
                 End Try
-
 
                 If template IsNot Nothing Then
                     Controller.Voucher.CompleteVoucherDetail(template, DatabaseManager)
@@ -276,10 +272,16 @@ Class AddVoucher
                 .VAT = cbVATType.SelectedItem
             End With
 
-            JournalAccountDistributions.Add(newJournalAccountDistributionItem)
+            If lbJournalIdx.Text = "" Then
+                JournalAccountDistributions.Add(newJournalAccountDistributionItem)
+            Else
+                JournalAccountDistributions.Item(lbJournalIdx.Text) = newJournalAccountDistributionItem
+            End If
+
             lstJournalAccounts.ItemsSource = JournalAccountDistributions
 
             cbJournalAccount.SelectedItem = Nothing
+            lbJournalIdx.Text = ""
             tbAmount.Text = ""
             tbWTaxRate.Text = ""
             cbVATType.SelectedItem = 0
@@ -287,6 +289,30 @@ Class AddVoucher
             MessageBox.Show("All Fields are Reqiured, input all Fields.", MessageBoxButton.OK, MessageBoxImage.Error)
         End If
     End Sub
+    Private Sub FillJournalAccountFields(journalAccountItem As Model.JournalAccountDistributionItem)
+        lbJournalIdx.Text = lstJournalAccounts.SelectedIndex
+        For i As Integer = 0 To lstJournalAccounts.Items.Count - 1
+            If cbJournalAccount.Items(i).name = journalAccountItem.Journal_Account.Name Then
+                cbJournalAccount.SelectedIndex = i
+            End If
+        Next
+        tbAmount.Text = journalAccountItem.Amount
+        tbWTaxRate.Text = journalAccountItem.W_TAX
+        cbVATType.SelectedIndex = journalAccountItem.VAT
+    End Sub
+
+    Private Sub ClearJournalAccountFields()
+        lbJournalIdx.Text = ""
+        cbJournalAccount.SelectedIndex = 0
+        tbAmount.Text = ""
+        tbWTaxRate.Text = ""
+        cbVATType.SelectedIndex = 0
+    End Sub
+
+    Private Sub lstJournalAccounts_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles lstJournalAccounts.SelectionChanged
+        If lstJournalAccounts.SelectedItem IsNot Nothing Then FillJournalAccountFields(lstJournalAccounts.SelectedItem)
+    End Sub
+
 
     Private Sub btnSave_Click(sender As Object, e As RoutedEventArgs)
         DatabaseManager.Connection.Open()
@@ -371,9 +397,10 @@ Class AddVoucher
     Private Sub AddVoucher_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         SupplierAccount = New Model.SupplierAccount
 
-        Particulars = New ObservableCollection(Of books_service.Model.ParticularsItem)
+        Particulars = New ObservableCollection(Of Model.ParticularsItem)
         lstParticulars.ItemsSource = Particulars
     End Sub
+
 
     Public Enum EditModeChoices
         Voucher

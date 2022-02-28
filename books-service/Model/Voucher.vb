@@ -91,22 +91,20 @@ Namespace Model
         Sub New()
         End Sub
 
-        Sub New(reader As MySql.Data.MySqlClient.MySqlDataReader, Optional noId As Boolean = False)
-            If noId = False Then Id = reader.Item("id")
+        Sub New(reader As MySql.Data.MySqlClient.MySqlDataReader, Optional asTemplate As Boolean = False)
+            If asTemplate = False Then
+                Id = reader.Item("id")
+                Voucher_No = reader.Item("voucher_no")
+                Entry_Date = reader.Item("Entry_Date")
+                Print_Status = reader.Item("print_status")
+            End If
 
-            Voucher_No = reader.Item("voucher_no")
-            Entry_Date = reader.Item("Entry_Date")
-            'Company_Name = reader.Item("Company_Name")
-            'Supplier_Payee = reader.Item("Supplier_Payee")
-            'Supplier_Account_Number = reader.Item("Supplier_Account_Number")
-            'Bank_Account_Code = reader.Item("bank_Account_Code")
             Particulars_String = reader.Item("particulars")
             Journal_Account_Distributions_String = reader.Item("journal_account_distributions")
             Particulars = JsonConvert.DeserializeObject(Particulars_String, Particulars.GetType)
             Journal_Account_Distributions = JsonConvert.DeserializeObject(Journal_Account_Distributions_String, Journal_Account_Distributions.GetType)
 
             Remarks = reader.Item("Remarks")
-            Print_Status = reader.Item("print_status")
 
             Company_Id = reader.Item("company_id")
             Bank_Account_Id = reader.Item("bank_account_id")
