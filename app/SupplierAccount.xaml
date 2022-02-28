@@ -13,11 +13,11 @@
     <Grid>
       
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="380"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"/>
+            <RowDefinition Height="75"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -46,43 +46,7 @@
                     <TextBlock Text="Account Number: " HorizontalAlignment="Left"  Style="{StaticResource RegularTextBlock}"/>
                     <TextBox x:Name="tbAccountNumber" Style="{StaticResource RegularTextBox}"/>
                 </StackPanel>
-            </StackPanel>
-            <!--<StackPanel Orientation="Horizontal">
-                <StackPanel>
-                    <TextBlock Text="Company:" HorizontalAlignment="Left"  Style="{StaticResource RegularTextBlock}"/>
-                    <ComboBox x:Name="cbCompany" Style="{StaticResource RegularComboBox}"/>
-                </StackPanel>
-
-                <StackPanel>
-                    <TextBlock Text="Bank Account: " HorizontalAlignment="Left"  Style="{StaticResource RegularTextBlock}"/>
-                    <ComboBox x:Name="cbBankAccount" Style="{StaticResource RegularComboBox}"/>
-                </StackPanel>
-            </StackPanel>-->
-            <!--<StackPanel HorizontalAlignment="Left">
-                <TextBlock Text="Default Particulars:" HorizontalAlignment="Left" Style="{StaticResource RegularTextBlock}"/>
-                <DataGrid x:Name="lstParticulars"
-                          AutoGenerateColumns="False"
-                          Margin="0,10"
-                          HorizontalAlignment="Left"
-                          Height="175"
-                          CanUserAddRows="True"
-                          CanUserDeleteRows="True"
-                          CanUserSortColumns="True">
-                    <DataGrid.Resources>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Style.Setters>
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style.Setters>
-                        </Style>
-                    </DataGrid.Resources>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Field" Width="125" Binding="{Binding Field}"/>
-                        <DataGridTextColumn Header="Value" Width="270" Binding="{Binding Value}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>-->
-
-            <Button Click="btnAddSupplierAccount_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="6,0" Height="25">
+            <Button Click="btnAddSupplierAccount_Click" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Padding="6,0" Height="25">
                 <Button.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -94,10 +58,13 @@
                     </Grid>
                 </Button.Content>
             </Button>
+            </StackPanel>
+         
+
 
         </StackPanel>
         
-        <DataGrid Grid.Column="1" Grid.Row="1" x:Name="lstSupplierAccounts"
+        <DataGrid Grid.Column="0" Grid.Row="2" x:Name="lstSupplierAccounts"
                       AutoGenerateColumns="False"
                   HorizontalAlignment="Left"
                       IsReadOnly="True"
