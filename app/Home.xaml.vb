@@ -70,7 +70,7 @@ Class Home
         Controller.VoucherReminder.CompleteVoucherReminderDetail(voucherReminder, DatabaseManager)
         DatabaseManager.Connection.Close()
 
-        NavigationService.Navigate(New AddVoucher(voucherReminder.Schedule.Template.Voucher))
+        'NavigationService.Navigate(New AddVoucher(voucherReminder.Schedule.Template.Voucher))
     End Sub
 
     'Private Sub lstReminders_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles lstReminders.SelectionChanged

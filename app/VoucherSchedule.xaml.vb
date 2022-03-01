@@ -4,7 +4,6 @@ Imports books_service
 
 Class VoucherSchedule
     Public Property VoucherSchedules As ObservableCollection(Of Model.VoucherScheduledEntry)
-    Public Property VoucherTemplates As ObservableCollection(Of Model.VoucherTemplate)
 
     Sub New()
 
@@ -22,7 +21,7 @@ Class VoucherSchedule
 
         lstVoucherSchedules.ItemsSource = VoucherSchedules
 
-        cbVoucherTemplates.ItemsSource = Controller.VoucherTemplate.LoadVoucherTemplates(DatabaseManager)
+        '     cbVoucherTemplates.ItemsSource = Controller.VoucherTemplate.LoadVoucherTemplates(DatabaseManager)
 
 
         DatabaseManager.Connection.Close()

@@ -103,7 +103,6 @@
     <Compile Include="Controller\Voucher.vb" />
     <Compile Include="Controller\VoucherReminder.vb" />
     <Compile Include="Controller\VoucherScheduledEntry.vb" />
-    <Compile Include="Controller\VoucherTemplate.vb" />
     <Compile Include="Model\Company.vb" />
     <Compile Include="Model\CompanyBankAccount.vb" />
     <Compile Include="Model\SupplierAccountField.vb" />
@@ -116,7 +115,6 @@
     <Compile Include="Model\VAT.vb" />
     <Compile Include="Model\VoucherReminder.vb" />
     <Compile Include="Model\VoucherScheduledEntry.vb" />
-    <Compile Include="Model\VoucherTemplate.vb" />
     <Compile Include="Model\WTAX.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

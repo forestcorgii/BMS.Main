@@ -14,7 +14,6 @@ Class AddVoucher
     Private EditMode As EditModeChoices
 
     Private Voucher As Model.Voucher
-    Private VoucherTemplate As Model.VoucherTemplate
 
 
 
@@ -93,20 +92,6 @@ Class AddVoucher
         Voucher = voucherForEdit
         PopulateVoucher(voucherForEdit)
         EditMode = EditModeChoices.Voucher
-
-        Mode = ProcessTypeChoices.STAND_BY
-    End Sub
-
-    Sub New(template As Model.VoucherTemplate)
-        InitializeComponent()
-
-        Mode = ProcessTypeChoices.SETUP
-
-        GeneralSetup()
-        VoucherTemplate = template
-
-        PopulateVoucher(template.Voucher)
-        EditMode = EditModeChoices.Template
 
         Mode = ProcessTypeChoices.STAND_BY
     End Sub
@@ -212,7 +197,7 @@ Class AddVoucher
                     SupplierAccount = Controller.SupplierAccount.GetSupplierAccount(DatabaseManager, supplierAccount_args(0).Trim, supplierAccount_args(1).Trim)
 
                     If SupplierAccount IsNot Nothing Then
-                        template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, SupplierAccount.Supplier_Id, SupplierAccount.Id)
+                        template = Controller.Voucher.GetTemplate(DatabaseManager, SupplierAccount.Supplier_Id, SupplierAccount.Id)
                     End If
                 Catch ex As Exception
                     MessageBox.Show(ex.Message, "tbSupplierAccount_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)
@@ -239,7 +224,7 @@ Class AddVoucher
                 Try
                     Supplier = Controller.Supplier.GetSupplier(supplier_args(0).Trim, supplier_args(1).Trim, DatabaseManager)
                     If Supplier IsNot Nothing Then
-                        template = Controller.VoucherTemplate.GetTemplate(DatabaseManager, Supplier.Id, 0)
+                        template = Controller.Voucher.GetTemplate(DatabaseManager, Supplier.Id, 0)
                     End If
                 Catch ex As Exception
                     MessageBox.Show(ex.Message, "tbSupplier_TextChanged", MessageBoxButton.OK, MessageBoxImage.Error)

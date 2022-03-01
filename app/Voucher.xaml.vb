@@ -58,34 +58,9 @@ Class Voucher
         NavigationService.Navigate(New AddVoucher(selectedVoucher))
     End Sub
 
-    Private Sub btnAddToTemplate_Click(sender As Object, e As RoutedEventArgs)
-        Dim selectedVoucher As Model.Voucher = DirectCast(lstVoucher.SelectedItem, Model.Voucher)
-        Controller.Voucher.CompleteVoucherDetail(selectedVoucher, DatabaseManager)
-        'selectedVoucher.CompleteVoucherDetail(DatabaseManager)
-
-        DatabaseManager.Connection.Open()
-        Try
-            Dim newVoucherTemplate As New Model.VoucherTemplate
-            With newVoucherTemplate
-                .Voucher = Controller.Voucher.ToTemplate(selectedVoucher)
-                .Supplier_Id = selectedVoucher.Supplier_Id
-                .Supplier_Account_Id = selectedVoucher.Supplier_Account_Id
-                .ChangeState = States.ChangeState.Added
-
-                Controller.VoucherTemplate.SaveVoucherTemplate(newVoucherTemplate, DatabaseManager.Connection)
-            End With
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
-        MessageBox.Show("done")
-        DatabaseManager.Connection.Close()
-    End Sub
 
     Private Sub btnAddVoucher_Click(sender As Object, e As RoutedEventArgs)
         NavigationService.Navigate(New AddVoucher())
-    End Sub
-    Private Sub btnVoucherTemplate_Click(sender As Object, e As RoutedEventArgs)
-        NavigationService.Navigate(New VoucherTemplate())
     End Sub
     Private Sub btnVoucherSchedule_Click(sender As Object, e As RoutedEventArgs)
         NavigationService.Navigate(New VoucherSchedule())

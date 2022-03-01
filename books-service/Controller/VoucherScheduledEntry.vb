@@ -45,7 +45,7 @@ Namespace Controller
                 Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("select * from voucher_entry.voucher_template where id={0}", voucherScheduledEntry.Template_Id))
                     If reader.HasRows Then
                         reader.Read()
-                        voucherScheduledEntry.Template = New Model.VoucherTemplate(reader)
+                        'voucherScheduledEntry.Template = New Model.VoucherTemplate(reader)
                     End If
                 End Using
 

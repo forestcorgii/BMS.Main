@@ -41,7 +41,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
+                    <!--<StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal" Margin="8">
                             <TextBlock FontSize="12" Text="Gross Amount: " VerticalAlignment="Center" />
                             <TextBlock FontSize="16" Foreground="MidnightBlue" Text="{Binding Gross_Amount}" VerticalAlignment="Center" />
@@ -50,7 +50,7 @@
                             <TextBlock FontSize="12" Text="Tax Amount: " VerticalAlignment="Center" />
                             <TextBlock FontSize="16" Foreground="MidnightBlue" Text="{Binding Tax_Amount}" VerticalAlignment="Center" />
                         </StackPanel>
-                    </StackPanel>
+                    </StackPanel>-->
 
 
                     <StackPanel Orientation="Horizontal" Margin="8">
@@ -146,18 +146,7 @@
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Click="btnVoucherTemplate_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0" Visibility="Collapsed">
-                    <Button.Content>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Image Grid.Column="0" Source="assets/template.png" VerticalAlignment="Center" />
-                            <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Voucher Template"/>
-                        </Grid>
-                    </Button.Content>
-                </Button>
+               
                 <Button Click="btnAddVoucher_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="6,0">
                     <Button.Content>
                         <Grid>

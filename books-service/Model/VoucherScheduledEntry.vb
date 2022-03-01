@@ -5,7 +5,6 @@ Namespace Model
     Public Class VoucherScheduledEntry
         Public Property Id As Integer
 
-        Public Template As VoucherTemplate
         Public Property Template_Id As Integer
         Public Property Template_Name As String
 
