@@ -21,7 +21,7 @@ Class VoucherSchedule
 
         lstVoucherSchedules.ItemsSource = VoucherSchedules
 
-        '     cbVoucherTemplates.ItemsSource = Controller.VoucherTemplate.LoadVoucherTemplates(DatabaseManager)
+        cbVoucherTemplates.ItemsSource = Controller.Voucher.LoadVouchers(DatabaseManager, completeDetail:=True)
 
 
         DatabaseManager.Connection.Close()
@@ -49,11 +49,10 @@ Class VoucherSchedule
         DatabaseManager.Connection.Open()
         Dim newVoucherScheduleEntry As New Model.VoucherScheduledEntry
         With newVoucherScheduleEntry
-            .Template_Id = cbVoucherTemplates.SelectedItem.id
+            .Voucher_Id = cbVoucherTemplates.SelectedItem.id
             .Interval = cbInterval.SelectedIndex
 
             .Start_From = dtFrom.SelectedDate
-            .End_To = dtTo.SelectedDate
 
             .ChangeState = States.ChangeState.Added
             If lbId.Text <> "" And lbId.Text <> "0" Then
@@ -73,7 +72,7 @@ Class VoucherSchedule
     Private Sub FillVoucherScheduleEntry(_voucherSchedule As Model.VoucherScheduledEntry)
         lbId.Text = _voucherSchedule.Id
         For i As Integer = 0 To cbVoucherTemplates.Items.Count - 1
-            If _voucherSchedule.Template_Id = cbVoucherTemplates.Items(i).id Then
+            If _voucherSchedule.Voucher_Id = cbVoucherTemplates.Items(i).id Then
                 cbVoucherTemplates.SelectedIndex = i
             End If
         Next
@@ -81,7 +80,6 @@ Class VoucherSchedule
         cbInterval.SelectedIndex = _voucherSchedule.Interval
 
         dtFrom.SelectedDate = _voucherSchedule.Start_From
-        dtTo.SelectedDate = _voucherSchedule.End_To
 
     End Sub
 
@@ -91,7 +89,6 @@ Class VoucherSchedule
         cbInterval.SelectedItem = Nothing
 
         dtFrom.SelectedDate = Now
-        dtTo.SelectedDate = Now
 
     End Sub
 

@@ -40,7 +40,7 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel>
                         <TextBlock x:Name="lbId" Visibility="Collapsed"/>
-                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="Voucher Template" HorizontalAlignment="Left"/>
+                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="Based On:" HorizontalAlignment="Left"/>
                         <ComboBox x:Name="cbVoucherTemplates" Style="{StaticResource RegularComboBox}" Width="275"/>
                     </StackPanel>
                     <StackPanel>
@@ -56,12 +56,8 @@
 
                 <StackPanel Orientation="Horizontal">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="From" HorizontalAlignment="Left"/>
+                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="Start On:" HorizontalAlignment="Left"/>
                         <DatePicker x:Name="dtFrom" Style="{StaticResource RegularDatePicker}"/>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource RegularTextBlock}" Text="To" HorizontalAlignment="Left"/>
-                        <DatePicker x:Name="dtTo" Style="{StaticResource RegularDatePicker}"/>
                     </StackPanel>
                     <Button Click="btnAddVoucherSchedule_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Padding="6,0" Height="25" VerticalAlignment="Bottom">
                         <Button.Content>
@@ -71,7 +67,7 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
                                 <Image Grid.Column="0" Source="assets/save.png" VerticalAlignment="Center" />
-                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Save Schedule"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Padding="3,0,3,2" FontSize="14" FontWeight="DemiBold" Text="Save Reminder"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -95,10 +91,9 @@
             </DataGrid.Resources>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Voucher Template Name" Width="500" Binding="{Binding Template_Name}"/>
+                <DataGridTextColumn Header="Voucher Name" Width="500" Binding="{Binding Voucher_No}"/>
                 <DataGridTextColumn Header="Interval" Width="100" Binding="{Binding Interval}"/>
                 <DataGridTextColumn Header="From" Width="100" Binding="{Binding Start_From}"/>
-                <DataGridTextColumn Header="To" Width="100" Binding="{Binding End_To}"/>
             </DataGrid.Columns>
         </DataGrid>
  

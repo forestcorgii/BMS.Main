@@ -37,7 +37,7 @@ Namespace Model
         Sub New(reader As MySql.Data.MySqlClient.MySqlDataReader)
             Id = reader.Item("id")
             Schedule_Id = reader.Item("Schedule_Id")
-            Schedule_Template_Name = reader.Item("Template_Name")
+            Schedule_Template_Name = reader.Item("voucher_no")
             Schedule_Interval = reader.Item("Interval")
             Visible_Until = reader.Item("Visible_Until")
             Date_Added = reader.Item("Date_Added")

@@ -121,6 +121,9 @@ Namespace Model
             RE_PRINTED
             CANCELLED
         End Enum
+        Public Overrides Function ToString() As String
+            Return String.Format("{0} - {1}", Voucher_No, Company.Name)
+        End Function
     End Class
 
 

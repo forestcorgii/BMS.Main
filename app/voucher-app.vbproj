@@ -114,8 +114,8 @@
     <Compile Include="Voucher.xaml.vb">
       <DependentUpon>Voucher.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VoucherSchedule.xaml.vb">
-      <DependentUpon>VoucherSchedule.xaml</DependentUpon>
+    <Compile Include="VoucherReminder.xaml.vb">
+      <DependentUpon>VoucherReminder.xaml</DependentUpon>
     </Compile>
     <Page Include="AddVoucher.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -228,7 +228,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="VoucherSchedule.xaml">
+    <Page Include="VoucherReminder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -15,12 +15,12 @@ Namespace Controller
             Dim query As String = ""
             Dim command As New MySqlCommand()
             If voucherScheduleReminder.ChangeState = States.ChangeState.Added Then
-                query = "insert into `voucher_entry`.`voucher_schedule_reminder` (schedule_id,visible_until)values(@schedule_id,@visible_until)"
+                query = "insert into `voucher_entry`.`voucher_reminder` (schedule_id,visible_until)values(@schedule_id,@visible_until)"
             ElseIf voucherScheduleReminder.ChangeState = States.ChangeState.Deleted Then
-                query = "delete from `voucher_entry`.`voucher_schedule_reminder` where id=@id;"
+                query = "delete from `voucher_entry`.`voucher_reminder` where id=@id;"
                 command.Parameters.AddWithValue("id", voucherScheduleReminder.Id)
             ElseIf voucherScheduleReminder.ChangeState = States.ChangeState.None Then
-                query = "replace into `voucher_entry`.`voucher_schedule_reminder` (id,schedule_id,visible_until)values(@id,@schedule_id,@visible_until)"
+                query = "replace into `voucher_entry`.`voucher_reminder` (id,schedule_id,visible_until)values(@id,@schedule_id,@visible_until)"
                 command.Parameters.AddWithValue("id", voucherScheduleReminder.Id)
             End If
 
@@ -38,7 +38,7 @@ Namespace Controller
 
         Public Shared Sub CompleteVoucherReminderDetail(voucherScheduleReminder As Model.VoucherReminder, databaseManager As utility_service.Manager.Mysql)
             Try
-                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("select * from voucher_entry.voucher_scheduled_entry_complete where id={0}", voucherScheduleReminder.Schedule_Id))
+                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader(String.Format("select * from voucher_entry.voucher_reminder_complete where id={0}", voucherScheduleReminder.Schedule_Id))
                     If reader.HasRows Then
                         reader.Read()
                         voucherScheduleReminder.Schedule = New Model.VoucherScheduledEntry(reader)
@@ -55,7 +55,7 @@ Namespace Controller
         Public Shared Function LoadVoucherReminders(databaseManager As Manager.Mysql) As ObservableCollection(Of Model.VoucherReminder)
             Dim voucherReminders As New ObservableCollection(Of Model.VoucherReminder)
             Try
-                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader("SELECT * FROM `voucher_entry`.voucher_schedule_reminder_complete;")
+                Using reader As MySqlDataReader = databaseManager.ExecuteDataReader("SELECT * FROM `voucher_entry`.voucher_reminder_complete;")
                     If reader.HasRows Then
                         While reader.Read
                             voucherReminders.Add(New Model.VoucherReminder(reader))

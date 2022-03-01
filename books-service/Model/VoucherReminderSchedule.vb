@@ -5,8 +5,9 @@ Namespace Model
     Public Class VoucherScheduledEntry
         Public Property Id As Integer
 
-        Public Property Template_Id As Integer
-        Public Property Template_Name As String
+        Public Property Voucher As Voucher
+        Public Property Voucher_Id As Integer
+        Public Property Voucher_No As String
 
         Public Property Interval As IntervalChoices
 
@@ -26,12 +27,12 @@ Namespace Model
         End Sub
         Sub New(reader As MySqlDataReader)
             Id = reader.Item("id")
-            Template_Id = reader.Item("template_id")
-            Template_Name = reader.Item("template_name")
+            Voucher_Id = reader.Item("voucher_id")
+            Voucher_No = reader.Item("voucher_no")
+
             Interval = reader.Item("interval")
 
             Start_From = reader.Item("start_from")
-            End_To = reader.Item("end_to")
 
             Last_Reminder_Generated = reader.Item("last_reminder_generated")
 
@@ -42,7 +43,7 @@ Namespace Model
 
 
         Public Overrides Function ToString() As String
-            Return Id
+            Return Voucher_No
         End Function
 
         Public Enum IntervalChoices
